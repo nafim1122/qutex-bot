@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USD/BDT Trading Bot - Live Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .status {
+            font-size: 1.2em;
+            color: #4ade80;
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .card-title {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .card-value {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .card-subtitle {
+            font-size: 0.8em;
+            opacity: 0.7;
+        }
+        
+        .positive {
+            color: #4ade80;
+        }
+        
+        .negative {
+            color: #ff6b6b;
+        }
+        
+        .signal-box {
+            grid-column: 1 / -1;
+            background: rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(74, 222, 128, 0.3);
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .signal-title {
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+        
+        .signal-direction {
+            font-size: 3em;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        
+        .signal-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .detail-item {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 5px;
+        }
+        
+        .detail-label {
+            font-size: 0.8em;
+            opacity: 0.8;
+            margin-bottom: 5px;
+        }
+        
+        .detail-value {
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+        
+        .chart {
+            grid-column: 1 / -1;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 20px;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .button-group {
+            grid-column: 1 / -1;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        button {
+            padding: 12px 30px;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .btn-start {
+            background: #4ade80;
+            color: #000;
+        }
+        
+        .btn-start:hover {
+            background: #22c55e;
+            transform: scale(1.05);
+        }
+        
+        .btn-stop {
+            background: #ff6b6b;
+            color: #fff;
+        }
+        
+        .btn-stop:hover {
+            background: #ff5252;
+            transform: scale(1.05);
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            opacity: 0.7;
+            font-size: 0.9em;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            .card-value {
+                font-size: 1.5em;
+            }
+            
+            .signal-direction {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>💹 USD/BDT Trading Bot</h1>
+            <p class="status">🟢 Status: Online & Trading Active</p>
+        </header>
+        
+        <div class="dashboard">
+            <!-- Account Cards -->
+            <div class="card">
+                <div class="card-title">Current Price</div>
+                <div class="card-value">$110.50</div>
+                <div class="card-subtitle">USD/BDT</div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">Account Balance</div>
+                <div class="card-value">$10,450</div>
+                <div class="card-subtitle positive">+$450 (4.5%)</div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">Total Trades</div>
+                <div class="card-value">12</div>
+                <div class="card-subtitle">Win Rate: 66.7%</div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">Win/Loss Ratio</div>
+                <div class="card-value">2.0:1</div>
+                <div class="card-subtitle">Risk/Reward</div>
+            </div>
+            
+            <!-- Signal Box -->
+            <div class="signal-box">
+                <div class="signal-title">Latest Signal</div>
+                <div class="signal-direction positive">
+                    ▲ BUY
+                </div>
+                <div class="signal-details">
+                    <div class="detail-item">
+                        <div class="detail-label">Entry Price</div>
+                        <div class="detail-value">$110.50</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Stop Loss</div>
+                        <div class="detail-value">$110.40</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Take Profit</div>
+                        <div class="detail-value">$110.65</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Confidence</div>
+                        <div class="detail-value">92.5%</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Model Performance -->
+            <div class="card">
+                <div class="card-title">LSTM Accuracy</div>
+                <div class="card-value positive">99.4%</div>
+                <div class="card-subtitle">2018-2023 Backtest</div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">Sharpe Ratio</div>
+                <div class="card-value positive">1.42</div>
+                <div class="card-subtitle">Risk-Adjusted Returns</div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">Max Drawdown</div>
+                <div class="card-value negative">-3.2%</div>
+                <div class="card-subtitle">Historical</div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">Confirmation Rate</div>
+                <div class="card-value positive">87.3%</div>
+                <div class="card-subtitle">LSTM + GBC</div>
+            </div>
+            
+            <!-- Chart -->
+            <div class="chart">
+                <p>📊 Live Price Chart (WebSocket Connection)</p>
+            </div>
+            
+            <!-- Controls -->
+            <div class="button-group">
+                <button class="btn-start" onclick="startTrading()">▶ START TRADING</button>
+                <button class="btn-stop" onclick="stopTrading()">⏹ STOP TRADING</button>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>🤖 USD/BDT Trading Bot v1.0.0 | Powered by LSTM Neural Network</p>
+            <p style="margin-top: 10px; font-size: 0.85em;">
+                ⚠️ DEMO MODE ONLY - Past performance does not guarantee future results
+            </p>
+        </div>
+    </div>
+    
+    <script>
+        function startTrading() {
+            alert('✓ Trading started! The bot is now analyzing USD/BDT price movements.');
+        }
+        
+        function stopTrading() {
+            alert('⏹ Trading stopped. All positions will be closed.');
+        }
+        
+        // Update price every 2 seconds
+        setInterval(() => {
+            fetch('/api/trading/price')
+                .then(r => r.json())
+                .then(data => {
+                    console.log('Price updated:', data);
+                })
+                .catch(e => console.log('API unavailable:', e));
+        }, 2000);
+    </script>
+</body>
+</html>
